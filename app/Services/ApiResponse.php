@@ -15,7 +15,7 @@ class ApiResponse
     501 => 'Not Implemented',
   ];
 
-  public static function send($data = null, $status = 200, $message = null,)
+  public static function send($data = null, $status = 200, $message = null)
   {
     $response = service('response');
 
