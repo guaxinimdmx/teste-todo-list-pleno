@@ -36,7 +36,7 @@ class AuthController extends BaseController
 
     public function me()
     {
-        $userId = $this->request->user_id;
+        $userId = $this->request->user_id ?? null;
 
         $userModel = new UserModel();
         $user = $userModel->find($userId);
