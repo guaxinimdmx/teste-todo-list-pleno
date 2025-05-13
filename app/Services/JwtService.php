@@ -8,15 +8,15 @@ use Exception;
 
 class JwtService
 {
-  protected static $secretKey = '';
-  protected static $algorithm = 'HS256';
+  protected string $secretKey;
+  protected string $algorithm = 'HS256';
 
   public function __construct()
   {
     $this->secretKey = getenv('jwt.secret') ?: 'voce_deveria_alterar_isso';
   }
 
-  public static function generateToken(int $userId): string
+  public function generateToken(int $userId): string
   {
     $issuedAt = time();
     $expiration = $issuedAt + (2 * 60 * 60);
@@ -27,13 +27,13 @@ class JwtService
       'exp' => $expiration,
     ];
 
-    return JWT::encode($payload, self::$secretKey, self::$algorithm);
+    return JWT::encode($payload, $this->secretKey, $this->algorithm);
   }
 
-  public static function validateToken(string $token): object|false
+  public function validateToken(string $token): object|false
   {
     try {
-      return JWT::decode($token, new Key(self::$secretKey, self::$algorithm));
+      return JWT::decode($token, new Key($this->secretKey, $this->algorithm));
     } catch (Exception $e) {
       return false;
     }
