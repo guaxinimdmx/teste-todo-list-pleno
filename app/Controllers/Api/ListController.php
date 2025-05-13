@@ -63,8 +63,8 @@ class ListController extends BaseController
 
     public function update($listId)
     {
-        $list = $this->getRecordList($listId);
         $data = $this->request->getJSON(true);
+        $list = $this->getRecordList($listId);
 
         if (!$list)
             return ApiResponse::send(null, 404, 'Lista não encontrada');
