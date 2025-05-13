@@ -11,13 +11,14 @@ class AuthController extends BaseController
 {
     public function login()
     {
+        $data = $this->request->getJSON(true);
 
-        $email = $this->request->getPost('email');
+        $email = $data['email'] ?? null;
 
         if (!$email)
             return ApiResponse::send(null, 400,  'Informe seu email');
 
-        $password = $this->request->getPost('password');
+        $password = $data['password'] ?? null;
 
         if (!$password)
             return ApiResponse::send(null, 400,  'Informe sua senha');

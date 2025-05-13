@@ -22,7 +22,9 @@ class ListController extends BaseController
 
     public function create()
     {
-        $title = $this->request->getPost('title');
+        $data = $this->request->getJSON(true);
+
+        $title = $data['title'] ?? null;
         $userId = $this->request->user_id ?? null;
 
         if (!$title)
