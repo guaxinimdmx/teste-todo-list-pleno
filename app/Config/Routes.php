@@ -11,7 +11,6 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
   $routes->get('/', 'Api::status');
 
   $routes->post('auth/login', 'AuthController::login');
-  $routes->post('auth/logout', 'AuthController::logout');
 
   $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('auth/me', 'AuthController::me');

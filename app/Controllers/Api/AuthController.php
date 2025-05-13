@@ -34,11 +34,6 @@ class AuthController extends BaseController
         return ApiResponse::send(['token' => $token], 200,  'Login realizado com sucesso');
     }
 
-    public function logout()
-    {
-        return ApiResponse::send(null, 501);
-    }
-
     public function me()
     {
         $userId = $this->request->user_id;
