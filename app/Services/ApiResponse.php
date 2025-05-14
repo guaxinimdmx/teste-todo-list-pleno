@@ -22,6 +22,7 @@ class ApiResponse
     $message = $message ?? self::$statusCodes[$status] ?? 'Unknown Status';
 
     $payload = [
+      'status' => $status,
       'error' => $status >= 400,
       'message' => $message,
       'data' => $data,
