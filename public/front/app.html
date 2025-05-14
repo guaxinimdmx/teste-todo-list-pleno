@@ -13,7 +13,23 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div id="vue"></div>
+    <div id="vue">
+      <div class="box">
+        <!-- aplicação -->
+        <template v-if="system.step=='app'"> aplicação </template>
+
+        <!-- login -->
+        <template v-if="system.step=='login'"> login </template>
+
+        <!-- url servidor -->
+        <template v-if="system.step=='server'">
+          <aside @click="useDefaultServerUrl">http://localhost:8080/api</aside>
+          <b>Qual a URL do backend?</b>
+          <input type="text" v-model="system.form.server.url" placeholder="Informe a URL do backend" />
+          <button @click="loadUrlServer">conectar</button>
+        </template>
+      </div>
+    </div>
     <div class="dev-note">
       <b>⭐Nota do desenvolvedor⭐</b><br />
       Esse front-end está desacoplado da aplicação back-end.<br />
