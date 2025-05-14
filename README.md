@@ -17,18 +17,20 @@ git clone https://github.com/guaxinimdmx/teste-todo-list-pleno
 
 ```
 database.default.hostname = localhost
-database.default.database = nome_do_banco
+database.default.database = teste_to_do_teste_pleno
 database.default.username = root
 database.default.password = senha_do_banco
 jwt.secret = senha_jwt
 ```
 
-3. Execute o script SQL para criar a base de dados _(ou restaure o estras/db.sqlite)_
+3. Execute o script SQL para criar a base de dados
 
 ```
 php spark migrate
 php spark db.seed:run
 ```
+
+💡 _Alternativamente, você pode importar o dump SQL localizado em schema.sql_
 
 4. Suba o servidor com o `spark serve`
 
