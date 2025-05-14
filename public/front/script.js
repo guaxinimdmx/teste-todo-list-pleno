@@ -15,12 +15,63 @@ createApp({
         formLogin: { email: null, password: null },
         formServer: { url: "http://localhost:8080/api" },
       },
+      activeListId: null,
+      data: {
+        lists: {},
+        takes: {},
+      },
     };
   },
-  methods: {
-    goStep(step) {
-      this.system.step = step;
+  computed: {
+    activeList() {
+      if (!this.activeListId) return null;
+      return this.data.lists.find((l) => l.id === this.activeListId) || null;
     },
+  },
+  methods: {
+    async createTask() {
+      if (!this.activeList) return;
+      const n = this.data.tasks.length || 0;
+      const description = n === 0 ? "Nova tarefa" : `Nova tarefa ${n}`;
+      const response = await this.api("post", `lists/${this.activeListId}/tasks`, {
+        list_id: this.activeListId,
+        description,
+      });
+      if (!response.error) {
+        if (!this.activeList.tasks) this.activeList.tasks = [];
+        this.activeList.tasks.push(response.data);
+      }
+    },
+    removeTask() {},
+    async loadDataTasks() {
+      const response = await this.api("get", `lists/${this.activeListId}`);
+      if (response.error) return;
+      this.data.tasks = response.data.tasks;
+    },
+
+    toggleActiveList(listId) {
+      console.log("toggle", listId);
+      this.activeListId = listId == this.activeListId ? null : listId;
+    },
+    async createList() {
+      const n = this.data.lists.length;
+      const title = n === 0 ? "Nova lista" : `Nova lista ${n}`;
+      const response = await this.api("post", `lists`, { title });
+      if (!response.error) {
+        this.data.lists.push(response.data);
+        this.activeListId = response.data.id;
+      }
+    },
+    removeList(listId) {
+      this.data.lists = this.data.lists.filter((l) => l.id !== listId);
+      this.api("delete", `lists/${listId}`);
+    },
+    async loadDataLists() {
+      const response = await this.api("get", "lists");
+      if (response.error) return;
+      this.data.lists = response.data;
+    },
+
     useDefaultAcessLogin() {
       this.system.formLogin.email = "teste@teste.com";
       this.system.formLogin.password = "1234";
@@ -42,6 +93,7 @@ createApp({
       this.system.accessToken = null;
       localStorage.removeItem("accessToken");
     },
+
     useDefaultServerUrl() {
       this.system.formServer.url = "http://localhost:8080/api";
     },
@@ -60,6 +112,7 @@ createApp({
         this.system.serverUrl = null;
       }
     },
+
     async api(method, uri = "", data = null) {
       const options = { method: method.toUpperCase(), headers: { "Content-Type": "application/json" } };
       if (this.system.accessToken) options.headers.Authorization = `Bearer ${this.system.accessToken}`;
@@ -90,6 +143,12 @@ createApp({
   watch: {
     "system.accessToken"(newVal) {
       this.system.step = Boolean(newVal) ? "app" : "login";
+    },
+    "system.step"(newVal) {
+      if (newVal == "app") this.loadDataLists();
+    },
+    activeListId(newVal) {
+      if (newVal && this.activeList) this.loadDataTasks();
     },
   },
 }).mount("#vue");
