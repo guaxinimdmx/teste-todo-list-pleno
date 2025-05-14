@@ -21,6 +21,11 @@ createApp({
     };
   },
   methods: {
+    renameTask(taskId) {
+      const task = this.activeList.tasks.find((t) => t.id === taskId);
+      if (!task) return;
+      this.api("put", `tasks/${taskId}`, { description: task.description });
+    },
     async toggleTask(taskId) {
       const task = this.activeList.tasks.find((t) => t.id === taskId);
       if (!task) return;
@@ -45,6 +50,14 @@ createApp({
       this.api("delete", `tasks/${taskId}`);
     },
 
+    updateLocalNameActiveList() {
+      const list = this.lists.find((t) => t.id === this.activeListId);
+      list.title = this.activeList.title;
+    },
+    renameActiveList() {
+      const list = this.lists.find((t) => t.id === this.activeListId);
+      this.api("put", `lists/${list.id}`, { title: list.title });
+    },
     toggleActiveList(listId) {
       this.activeListId = listId == this.activeListId ? null : listId;
     },
@@ -139,6 +152,8 @@ createApp({
           data: null,
         };
       }
+
+      console.log("status", responseData);
 
       if (responseData.error && responseData.status === 401) this.system.step = "login";
 
