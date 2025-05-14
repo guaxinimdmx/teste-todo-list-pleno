@@ -16,16 +16,25 @@
     <div id="vue">
       <div class="box">
         <!-- aplicação -->
-        <template v-if="system.step=='app'"> aplicação </template>
+        <template v-if="system.step=='app'">
+          <aside @click="logout">sair</aside>
+        </template>
 
         <!-- login -->
-        <template v-if="system.step=='login'"> login </template>
+        <template v-if="system.step=='login'">
+          <aside @click="useDefaultAcessLogin">teste@teste.com / 1234</aside>
+          <b>Login</b>
+          <input type="text" v-model="system.formLogin.email" placeholder="email" />
+          <input type="password" v-model="system.formLogin.password" placeholder="senha" />
+          <span class="error" v-if="system.formMessage">{{ system.formMessage }}</span>
+          <button @click="login">entrar</button>
+        </template>
 
         <!-- url servidor -->
         <template v-if="system.step=='server'">
           <aside @click="useDefaultServerUrl">http://localhost:8080/api</aside>
           <b>Qual a URL do backend?</b>
-          <input type="text" v-model="system.form.server.url" placeholder="Informe a URL do backend" />
+          <input type="text" v-model="this.system.formServer.url" placeholder="Informe a URL" />
           <button @click="loadUrlServer">conectar</button>
         </template>
       </div>

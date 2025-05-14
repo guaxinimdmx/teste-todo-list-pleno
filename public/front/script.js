@@ -10,16 +10,10 @@ createApp({
       system: {
         step: "server",
         serverUrl: null,
-        form: {
-          message: null,
-          server: {
-            url: "http://localhost:8080/api",
-          },
-          login: {
-            email: null,
-            password: null,
-          },
-        },
+        accessToken: null,
+        formMessage: null,
+        formLogin: { email: null, password: null },
+        formServer: { url: "http://localhost:8080/api" },
       },
     };
   },
@@ -27,13 +21,32 @@ createApp({
     goStep(step) {
       this.system.step = step;
     },
+    useDefaultAcessLogin() {
+      this.system.formLogin.email = "teste@teste.com";
+      this.system.formLogin.password = "1234";
+    },
+    async login() {
+      this.system.formMessage = null;
+      const response = await this.api("post", "auth/login", this.system.formLogin);
+
+      if (!response.error) {
+        this.system.accessToken = response.data.token;
+        localStorage.setItem("accessToken", this.system.accessToken);
+        this.system.formLogin.email = null;
+        this.system.formLogin.password = null;
+      } else {
+        this.system.formMessage = response.message;
+      }
+    },
+    logout() {
+      this.system.accessToken = null;
+      localStorage.removeItem("accessToken");
+    },
     useDefaultServerUrl() {
-      this.system.form.server.url = "http://localhost:8080/api";
+      this.system.formServer.url = "http://localhost:8080/api";
     },
     async loadUrlServer() {
-      if (this.system.step != "server") return;
-
-      let url = sessionStorage.getItem("url_server") ?? this.system.form.server.url;
+      let url = sessionStorage.getItem("url_server") ?? this.system.formServer.url;
       if (!url.endsWith("/")) url += "/";
 
       this.system.serverUrl = url;
@@ -73,5 +86,10 @@ createApp({
   },
   mounted() {
     this.loadUrlServer();
+  },
+  watch: {
+    "system.accessToken"(newVal) {
+      this.system.step = Boolean(newVal) ? "app" : "login";
+    },
   },
 }).mount("#vue");
