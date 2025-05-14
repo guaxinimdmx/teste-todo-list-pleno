@@ -7,10 +7,11 @@ O foco do teste é a API, autenticação e manipulação de dados via REST, com 
 
 ## 🚀 Como rodar o projeto
 
-- Clone este repositório
+- Clone e instale este repositório
 
 ```
 git clone https://github.com/guaxinimdmx/teste-todo-list-pleno
+composer install
 ```
 
 - Configure o `.env` com as credenciais do banco
@@ -27,7 +28,7 @@ jwt.secret = senha_jwt
 
 ```
 php spark migrate
-php spark db.seed:run
+php spark db:seed run
 ```
 
 💡 _Alternativamente, você pode importar o dump SQL localizado em schema.sql_
