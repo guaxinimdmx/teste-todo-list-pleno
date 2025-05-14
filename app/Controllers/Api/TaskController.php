@@ -36,6 +36,8 @@ class TaskController  extends BaseController
 
         $task = $taskModel->find($id);
 
+        $task['is_done'] = (bool) $task['is_done'];
+
         return ApiResponse::send($task, 201, 'Tarefa criada com sucesso');
     }
 

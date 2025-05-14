@@ -15,23 +15,21 @@ createApp({
         formLogin: { email: null, password: null },
         formServer: { url: "http://localhost:8080/api" },
       },
+      lists: {},
       activeListId: null,
-      data: {
-        lists: {},
-        takes: {},
-      },
+      activeList: null,
     };
   },
-  computed: {
-    activeList() {
-      if (!this.activeListId) return null;
-      return this.data.lists.find((l) => l.id === this.activeListId) || null;
-    },
-  },
   methods: {
+    async toggleTask(taskId) {
+      const task = this.activeList.tasks.find((t) => t.id === taskId);
+      if (!task) return;
+      task.is_done = !task.is_done;
+      this.api("put", `tasks/${taskId}`, { is_done: task.is_done });
+    },
     async createTask() {
-      if (!this.activeList) return;
-      const n = this.data.tasks.length || 0;
+      if (!this.activeListId) return;
+      const n = this.activeList.tasks.length || 0;
       const description = n === 0 ? "Nova tarefa" : `Nova tarefa ${n}`;
       const response = await this.api("post", `lists/${this.activeListId}/tasks`, {
         list_id: this.activeListId,
@@ -42,34 +40,44 @@ createApp({
         this.activeList.tasks.push(response.data);
       }
     },
-    removeTask() {},
-    async loadDataTasks() {
-      const response = await this.api("get", `lists/${this.activeListId}`);
-      if (response.error) return;
-      this.data.tasks = response.data.tasks;
+    removeTask(taskId) {
+      this.activeList.tasks = this.activeList.tasks.filter((l) => l.id !== taskId);
+      this.api("delete", `tasks/${taskId}`);
     },
 
     toggleActiveList(listId) {
-      console.log("toggle", listId);
       this.activeListId = listId == this.activeListId ? null : listId;
     },
+    async loadActiveList() {
+      if (!this.activeListId) {
+        this.activeList = null;
+      } else {
+        const response = await this.api("get", `lists/${this.activeListId}`);
+        if (response.error) {
+          this.activeListId = null;
+          return;
+        }
+        this.activeList = response.data;
+      }
+    },
     async createList() {
-      const n = this.data.lists.length;
+      const n = this.lists.length;
       const title = n === 0 ? "Nova lista" : `Nova lista ${n}`;
       const response = await this.api("post", `lists`, { title });
       if (!response.error) {
-        this.data.lists.push(response.data);
+        this.lists.push(response.data);
         this.activeListId = response.data.id;
       }
     },
     removeList(listId) {
-      this.data.lists = this.data.lists.filter((l) => l.id !== listId);
+      if (this.activeListId == listId) this.activeListId = null;
+      this.lists = this.lists.filter((l) => l.id !== listId);
       this.api("delete", `lists/${listId}`);
     },
     async loadDataLists() {
       const response = await this.api("get", "lists");
       if (response.error) return;
-      this.data.lists = response.data;
+      this.lists = response.data;
     },
 
     useDefaultAcessLogin() {
@@ -147,8 +155,8 @@ createApp({
     "system.step"(newVal) {
       if (newVal == "app") this.loadDataLists();
     },
-    activeListId(newVal) {
-      if (newVal && this.activeList) this.loadDataTasks();
+    activeListId() {
+      this.loadActiveList();
     },
   },
 }).mount("#vue");

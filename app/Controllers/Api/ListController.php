@@ -56,6 +56,9 @@ class ListController extends BaseController
 
         $tasks = $taskModel->where('list_id', $list['id'])->findAll();
 
+        foreach ($tasks as &$task)
+            $task['is_done'] = (bool) $task['is_done'];
+
         $list['tasks'] = $tasks;
 
         return ApiResponse::send($list, 200, 'Lista carregada com sucesso');

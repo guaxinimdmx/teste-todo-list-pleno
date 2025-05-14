@@ -19,21 +19,21 @@
         <template v-if="system.step=='app'">
           <aside @click="logout">sair</aside>
           <ul class="ul-lists">
-            <li v-for="list in data.lists" :key="list.id" :class="{active:activeListId == list.id}">
+            <li v-for="list in lists" :key="list.id" :class="{active:activeListId == list.id}">
               <span class="remover" @click="removeList(list.id)">[R]</span>
               <span class="title" @click="toggleActiveList(list.id)"> {{ list.title }}</span>
             </li>
             <li class="add" @click="createList()">[+]</li>
           </ul>
-          <pre>{{activeList}}</pre>
+          <pre>{{activeListId}}</pre>
           <div v-if="activeList" class="tasks">
             <input v-model="activeList.title" class="discret" />
             <ul class="ul-tasks">
-              <li v-for="task in data.tasks" :key="task.id">
-                <span class="toggle">[ ]</span>
-                <span class="toggle">[X]</span>
-                <span class="title">{{ task.title }}</span>
-                <span class="remover" @click="removeTask(list.id)">[R]</span>
+              <li v-for="task in activeList.tasks" :key="task.id">
+                <span class="toggle" v-if="!task.is_done" @click="toggleTask(task.id)">[ ]</span>
+                <span class="toggle" v-if="task.is_done" @click="toggleTask(task.id)">[X]</span>
+                <span class="title">{{ task.description }}</span>
+                <span class="remover" @click="removeTask(task.id)">[R]</span>
               </li>
               <li class="add" @click="createTask()">[+]</li>
             </ul>
