@@ -153,8 +153,6 @@ createApp({
         };
       }
 
-      console.log("status", responseData);
-
       if (responseData.error && responseData.status === 401) this.system.step = "login";
 
       return responseData;
