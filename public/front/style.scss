@@ -20,7 +20,7 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background: var(--background);
   color: var(--text);
   & * {
@@ -43,6 +43,7 @@ body {
   max-width: 800px;
   margin: 0 auto;
   padding: 10px;
+  padding-top: 32px;
   flex-grow: 1;
   font-size: 1.1em;
   .box {
@@ -110,6 +111,167 @@ body {
       border: solid 1px var(--line);
       background-color: var(--line);
       color: var(--text);
+    }
+  }
+
+  svg {
+    width: 1em;
+    fill: currentColor;
+  }
+
+  .app {
+    display: flex;
+    gap: 10px;
+  }
+
+  .add {
+    border: solid 1px var(--line);
+    background-color: var(--background);
+    color: var(--text);
+    padding: 10px;
+    font-size: 1.1em;
+    text-align: center;
+    border-radius: 5px;
+
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--success);
+    color: var(--background);
+    &:hover {
+      border: solid 1px var(--line);
+      background-color: var(--success);
+      color: var(--background);
+    }
+    &:not(:first-child) {
+      margin-top: 10px;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    li {
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background-color: white;
+      border: solid 1px var(--line);
+      position: relative;
+      transition:
+        background-color 0.2s,
+        transform 0.2s;
+      &:hover {
+        background: var(--background);
+        .trash {
+          background: var(--background);
+        }
+      }
+      .trash {
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        width: 28px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        color: var(--error);
+        border: solid 1px var(--line);
+        border-right: none;
+        border-radius: 5px 0 0 5px;
+        transition:
+          background-color 0.2s,
+          color 0.5s;
+        &:hover {
+          background: var(--error) !important;
+          color: white !important;
+        }
+      }
+      .toggle {
+        cursor: pointer;
+      }
+    }
+
+    &.ul-lists {
+      flex: 1;
+      font-size: 0.8em;
+      background: var(--background);
+      li {
+        .title {
+          padding: 5px;
+          flex-grow: 1;
+          cursor: pointer;
+        }
+        .trash {
+          left: -28px;
+        }
+        &.active {
+          transform: translateX(15px);
+          background: var(--line);
+          .trash {
+            background: var(--line);
+          }
+        }
+      }
+    }
+  }
+
+  .tasks {
+    flex: 2;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.9em;
+    border: solid 1px var(--line);
+
+    > input {
+      font-weight: bold;
+      padding: 5px 10px;
+      margin: 0;
+      border-bottom: solid 1px var(--line);
+      max-width: 475px;
+    }
+
+    .title {
+      flex-grow: 1;
+      padding: 5px;
+    }
+    .trash {
+      left: unset;
+      right: -32px;
+      width: 32px;
+      border: solid 1px var(--line);
+      border-left: none;
+      border-radius: 0 5px 5px 0;
+    }
+    .toggle {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      width: 32px;
+      justify-content: center;
+      cursor: pointer;
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+      background-color: var(--line);
+      color: var(--background);
+      &.checked {
+        background-color: var(--success);
+        color: var(--background);
+      }
     }
   }
 }

@@ -17,27 +17,29 @@
       <div class="box">
         <!-- aplicação -->
         <template v-if="system.step=='app'">
-          <aside @click="logout">sair</aside>
-          <ul class="ul-lists">
-            <li v-for="list in lists" :key="list.id" :class="{active:activeListId == list.id}">
-              <span class="remover" @click="removeList(list.id)">[R]</span>
-              <span class="title" @click="toggleActiveList(list.id)">{{ list.title }}</span>
-            </li>
-            <li class="add" @click="createList()">[+]</li>
-          </ul>
-          <div v-if="activeList" class="tasks">
-            <input v-model="activeList.title" class="discret" @change="renameActiveList()" @input="updateLocalNameActiveList()" />
-            <ul class="ul-tasks">
-              <li v-for="task in activeList.tasks" :key="task.id">
-                <span class="toggle" v-if="!task.is_done" @click="toggleTask(task.id)">[ ]</span>
-                <span class="toggle" v-if="task.is_done" @click="toggleTask(task.id)">[X]</span>
-                <span class="title">
-                  <input v-model="task.description" class="discret" @change="renameTask(task.id)" />
-                </span>
-                <span class="remover" @click="removeTask(task.id)">[R]</span>
+          <div class="app">
+            <aside @click="logout">sair</aside>
+            <ul class="ul-lists">
+              <li v-for="list in lists" :key="list.id" :class="{active:activeListId == list.id}">
+                <span class="trash" @click="removeList(list.id)" v-html="svg.trash"></span>
+                <span class="title" @click="toggleActiveList(list.id)">{{ list.title }}</span>
               </li>
-              <li class="add" @click="createTask()">[+]</li>
+              <li class="add" @click="createList()" v-html="svg.more"></li>
             </ul>
+            <div v-if="activeList" class="tasks">
+              <input v-model="activeList.title" class="discret" @change="renameActiveList()" @input="updateLocalNameActiveList()" maxlength="20" />
+              <ul class="ul-tasks">
+                <li v-for="task in activeList.tasks" :key="task.id">
+                  <span class="toggle" v-if="!task.is_done" @click="toggleTask(task.id)" v-html="svg.uncheck"></span>
+                  <span class="toggle checked" v-if="task.is_done" @click="toggleTask(task.id)" v-html="svg.check"></span>
+                  <span class="title">
+                    <input v-model="task.description" class="discret" @change="renameTask(task.id)" maxlength="40" />
+                  </span>
+                  <span class="trash" @click="removeTask(task.id)" v-html="svg.trash"></span>
+                </li>
+                <li class="add" @click="createTask()" v-html="svg.more"></li>
+              </ul>
+            </div>
           </div>
         </template>
 
